@@ -1,0 +1,21 @@
+name: Gemini AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Summarize changes
+        uses: google-github-actions/run-gemini-cli@v1
+        with:
+          command: 'summarize'
+          project: 'gen-lang-client-0247456501' # Replace with your Google Cloud project ID
+          region: 'us-central1' # Replace with your desired region
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
