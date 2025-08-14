@@ -10,6 +10,7 @@ jobs:
    steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        
       - name: Summarize changes
         uses: google-github-actions/run-gemini-cli@v0
         with:
