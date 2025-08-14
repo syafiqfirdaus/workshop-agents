@@ -1,7 +1,8 @@
 name: Gemini AI Code Review
 
 on:
-   pull_request:
+
+pull_request:
       types: [opened, synchronize]
    
 jobs:
@@ -18,4 +19,6 @@ jobs:
               project: 'gen-lang-client-0247456501' # Replace with your Google Cloud project ID
               region: 'us-central1' # Replace with your desired region
             env:
-              GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} 
+              GEMINI_API_KEY: \${{ secrets.GEMINI_API_KEY }} 
+EOF
+
