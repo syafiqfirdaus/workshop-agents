@@ -20,5 +20,5 @@ jobs:
               region: 'us-central1' # Replace with your desired region
             env:
               GEMINI_API_KEY: \${{ secrets.GEMINI_API_KEY }} 
-EOF
+
 
