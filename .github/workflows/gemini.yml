@@ -9,10 +9,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
           - name: Checkout code
-            uses: actions/checkout@v0
+          - uses: actions/checkout@v4
    
           - name: Summarize changes
-            uses: google-github-actions/run-gemini-cli@v0
+            uses: google-github-actions/run-gemini-cli@v4
             with:
               command: 'summarize'
               project: 'practical-bebop-469013-t3' # Replace with your Google Cloud project ID
