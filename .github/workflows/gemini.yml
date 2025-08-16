@@ -1,21 +1,22 @@
 name: Gemini AI Code Review
 
 on:
-  pull_request:
-    types: [opened, synchronize]
-
+   pull_request:
+      types: [opened, synchronize]
+   
 jobs:
-  code-review:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    code-review:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+          - uses: actions/checkout@v4
+   
+          - name: Summarize changes
+            uses: google-github-actions/run-gemini-cli@v4
+            with:
+              command: 'summarize'
+              project: 'practical-bebop-469013-t3' # Replace with your Google Cloud project ID
+              region: 'us-central1' # Replace with your desired region
+            env:
+              GEMINI_API_KEY: \${{ secrets.GEMINI_API_KEY }} 
 
-      - name: Summarize changes
-        uses: google-github-actions/run-gemini-cli@v0
-        with:
-          command: 'summarize'
-          project: 'practical-bebop-469013-t3' # Replace with your Google Cloud project ID
-          region: 'us-central1' # Replace with your desired region
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
