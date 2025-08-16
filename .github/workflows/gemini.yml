@@ -1,3 +1,4 @@
+
 name: Gemini AI Code Review
 
 on:
@@ -36,9 +37,6 @@ jobs:
           # Read the diff content
           DIFF_CONTENT=$(cat changes.diff)
           
-          # Escape the diff content for JSON
-          DIFF_JSON=$(echo "$DIFF_CONTENT" | jq -Rs .)
-          
           # Create the prompt for Gemini
           PROMPT="Please review this code diff and provide constructive feedback. Focus on:
           1. Code quality and best practices
@@ -71,14 +69,16 @@ jobs:
             -H "Content-Type: application/json" \
             -d "$JSON_PAYLOAD")
           
-          # Extract the review text
-          REVIEW_TEXT=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text // "Failed to get review from Gemini"')
+          # Extract the review text and save to file
+          echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text // "Failed to get review from Gemini"' > review.md
           
-          # Save review to file
-          echo "$REVIEW_TEXT" > review.md
-          echo "review_text<<EOF" >> $GITHUB_OUTPUT
-          echo "$REVIEW_TEXT" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          # Check if review was successful
+          if [ -s review.md ]; then
+            echo "review_success=true" >> $GITHUB_OUTPUT
+          else
+            echo "review_success=false" >> $GITHUB_OUTPUT
+            echo "Failed to get review from Gemini" > review.md
+          fi
 
       - name: Post review comment
         if: steps.changed-files.outputs.changes_exist == 'true'
@@ -86,7 +86,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const reviewText = `${{ steps.gemini-review.outputs.review_text }}`;
+            const reviewText = fs.readFileSync('review.md', 'utf8');
             
             const comment = `## 🤖 Gemini AI Code Review
             
